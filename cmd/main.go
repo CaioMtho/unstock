@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/CaioMtho/unstock/internal/config"
 	"github.com/CaioMtho/unstock/api"
 )
