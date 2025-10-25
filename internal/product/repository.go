@@ -59,7 +59,7 @@ func GetLowStockProducts() ([]Product, error){
 }
 
 func DeleteProductById(id int) error {
-	stmt := "UPDATE TABLE products WHERE id = ? SET is_active = 0"
+	stmt := "UPDATE products WHERE id = ? SET is_active = 0"
 	_, err := config.DB.Exec(stmt, id);
 	return err
 }
@@ -67,5 +67,19 @@ func DeleteProductById(id int) error {
 func UpdateProduct(p Product) error {
 	stmt := `UPDATE products SET name = ?, price = ?, stock = ?, min_stock = ? WHERE id = ?`
 	_, err := config.DB.Exec(stmt, p.Name, p.Price, p.Stock, p.MinStock, p.ID)
+	return err
+}
+
+func UpdateStock(id int, value int) error {
+	stmtQuery := `SELECT stock FROM products WHERE id = ?`
+	var currentStock int
+	err := config.DB.QueryRow(stmtQuery, id).Scan(&currentStock)
+	if err != nil {
+		return err
+	}
+	
+	newStock := currentStock + value
+	stmtUpdate := `UPDATE products SET stock = ? WHERE id = ?`
+	_, err = config.DB.Exec(stmtUpdate, newStock, id)
 	return err
 }
