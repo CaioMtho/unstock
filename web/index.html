@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Unstock</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Uncomplicated Stock</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Produtos</h2>
+      <table id="products-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nome</th><th>Preço</th><th>Estoque</th><th>Mínimo</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Adicionar Produto</h2>
+      <form id="add-product-form">
+        <input type="text" name="name" placeholder="Nome" required>
+        <input type="text" name="price" placeholder="Preço" required>
+        <input type="number" name="stock" placeholder="Estoque" required>
+        <input type="number" name="min_stock" placeholder="Estoque mínimo" required>
+        <button type="submit">Adicionar</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

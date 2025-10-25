@@ -13,6 +13,7 @@
 *.dylib
 anotacoes.txt
 db/*
+!db/.gitkeep
 
 # Test binary, built with `go test -c`
 *.test

@@ -8,7 +8,13 @@ import (
 func SetupEndpoints() *gin.Engine {
 	r := gin.Default()
 
-	productGroup := r.Group("/products")
+    r.Static("/static", "./web")
+
+    r.GET("/", func(c *gin.Context) {
+        c.File("./web/index.html")
+    })
+
+	productGroup := r.Group("api/products/")
     {
         productGroup.GET("/", product.GetAllHandler)
         productGroup.GET("/:id", product.GetByIDHandler)
@@ -19,7 +25,7 @@ func SetupEndpoints() *gin.Engine {
         productGroup.PUT("/:id", product.UpdateHandler)
     }
 
-	r.GET("ws/alerts", product.WebSocketAlerts)
+	r.GET("api/ws/alerts", product.WebSocketAlerts)
 
 	return r
 }
