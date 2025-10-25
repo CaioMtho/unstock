@@ -14,6 +14,7 @@
 anotacoes.txt
 db/*
 !db/.gitkeep
+releases/*
 
 # Test binary, built with `go test -c`
 *.test
