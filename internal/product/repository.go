@@ -9,7 +9,7 @@ func rowsToProducts(rows *sql.Rows) ([]Product, error){
 	var products []Product
 	for rows.Next() {
 		var p Product
-        err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.MinStock)
+        err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.MinStock, &p.IsActive)
         if err != nil {
             return nil, err
         }
@@ -20,7 +20,7 @@ func rowsToProducts(rows *sql.Rows) ([]Product, error){
 }
 
 func GetAllProducts() ([]Product, error) {
-    rows, err := config.DB.Query("SELECT * FROM products")
+    rows, err := config.DB.Query("SELECT * FROM products WHERE is_active = 1")
     if err != nil {
         return nil, err
     }
@@ -32,8 +32,8 @@ func GetAllProducts() ([]Product, error) {
 
 func GetProductById(id int) (Product, error) {
     var p Product
-    stmt := "SELECT id, name, price, stock, min_stock FROM products WHERE id = ?"
-    err := config.DB.QueryRow(stmt, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.MinStock)
+    stmt := "SELECT id, name, price, stock, min_stock, is_active FROM products WHERE id = ? AND is_active = 1"
+    err := config.DB.QueryRow(stmt, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.MinStock, &p.IsActive)
     if err != nil {
         return Product{}, err
     }
@@ -41,14 +41,14 @@ func GetProductById(id int) (Product, error) {
 }
 
 func InsertProduct (p Product) error {
-	stmt := `INSERT INTO products (name, price, stock, min_stock) VALUES (?, ?, ?, ?)`
+	stmt := `INSERT INTO products (name, price, stock, min_stock, is_active) VALUES (?, ?, ?, ?, 1)`
 	_, err := config.DB.Exec(stmt, p.Name, p.Price, p.Stock, p.MinStock)
 	return err
 }
 
 
 func GetLowStockProducts() ([]Product, error){
-	rows, err := config.DB.Query("SELECT * FROM products WHERE MinStock > Stock ORDER BY Stock")
+	rows, err := config.DB.Query("SELECT * FROM products WHERE MinStock > Stock AND is_active = 1 ORDER BY Stock")
 	if err != nil {
 		return nil, err
 	}
@@ -59,19 +59,19 @@ func GetLowStockProducts() ([]Product, error){
 }
 
 func DeleteProductById(id int) error {
-	stmt := "UPDATE products WHERE id = ? SET is_active = 0"
+	stmt := "UPDATE products SET is_active = 0 WHERE id = ? AND is_active = 1"
 	_, err := config.DB.Exec(stmt, id);
 	return err
 }
 
 func UpdateProduct(p Product) error {
-	stmt := `UPDATE products SET name = ?, price = ?, min_stock = ? WHERE id = ?`
+	stmt := `UPDATE products SET name = ?, price = ?, min_stock = ? WHERE id = ? AND is_active = 1`
 	_, err := config.DB.Exec(stmt, p.Name, p.Price, p.MinStock, p.ID)
 	return err
 }
 
 func UpdateStock(id int, value int) error {
-	stmtQuery := `SELECT stock FROM products WHERE id = ?`
+	stmtQuery := `SELECT stock FROM products WHERE id = ? AND is_active = 1`
 	var currentStock int
 	err := config.DB.QueryRow(stmtQuery, id).Scan(&currentStock)
 	if err != nil {

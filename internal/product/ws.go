@@ -12,7 +12,7 @@ var upgrader = websocket.Upgrader{
     CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-var StockUpdateChannel = make(chan Product)
+var StockUpdateChannel = make(chan Product, 10)
 
 func WebSocketAlerts(c *gin.Context) {
     conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)

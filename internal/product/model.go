@@ -6,4 +6,5 @@ type Product struct {
 	Price float64 `json:"price"`
 	Stock int `json:"stock"`
 	MinStock int `json:"min_stock"`
+	IsActive int `json:"is_active"`
 }
