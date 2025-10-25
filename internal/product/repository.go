@@ -65,8 +65,8 @@ func DeleteProductById(id int) error {
 }
 
 func UpdateProduct(p Product) error {
-	stmt := `UPDATE products SET name = ?, price = ?, stock = ?, min_stock = ? WHERE id = ?`
-	_, err := config.DB.Exec(stmt, p.Name, p.Price, p.Stock, p.MinStock, p.ID)
+	stmt := `UPDATE products SET name = ?, price = ?, min_stock = ? WHERE id = ?`
+	_, err := config.DB.Exec(stmt, p.Name, p.Price, p.MinStock, p.ID)
 	return err
 }
 
@@ -81,5 +81,15 @@ func UpdateStock(id int, value int) error {
 	newStock := currentStock + value
 	stmtUpdate := `UPDATE products SET stock = ? WHERE id = ?`
 	_, err = config.DB.Exec(stmtUpdate, newStock, id)
+
+	if err != nil {
+		return err
+	}
+
+	updatedProduct, err := GetProductById(id)
+	if err == nil {
+		StockUpdateChannel <- updatedProduct
+	}
+
 	return err
 }

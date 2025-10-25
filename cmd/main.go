@@ -2,9 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/CaioMtho/unstock/internal/config"
+	"github.com/CaioMtho/unstock/api"
 )
 
 func main() {
-	router := gin.Default()
-	router.Run("localhost:8080")
+	config.InitDB()
+	router := api.SetupEndpoints()
+	router.Run(":8080")
 }
